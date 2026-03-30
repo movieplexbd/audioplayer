@@ -42,8 +42,11 @@ jobs:
       - name: Build APK (Release)
         run: flutter build apk --release
 
+      - name: Debug - List all APK files (problem check korar jonno)
+        run: find build -name "*.apk" -type f || echo "No APK found"
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: audioplayer-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/**/app-*.apk   # old + new Flutter duitai catch kore
