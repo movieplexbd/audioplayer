@@ -5,7 +5,7 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch:  # Manual trigger er jonno
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,11 +14,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Java 11 (old project er jonno)
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
           channel: 'stable'
+
+      - name: Create missing key.properties (build fail fix)
+        run: |
+          mkdir -p android
+          cat > android/key.properties << EOF
+          storePassword=123456
+          keyPassword=123456
+          keyAlias=upload
+          storeFile=upload.jks
+          EOF
 
       - name: Get dependencies
         run: flutter pub get
